@@ -1,9 +1,29 @@
 {% extends "base.html"%}
 {% block titulo%}
-
+    Movimientos
 {%endblock%}
 {%block contenido%}
-    <p>
-        Aqui va el contenido
-    </p>
+    <h1> Listado de movimientos </h1>
+    <table>
+        <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Divisa</th>
+            <th>Cantidad</th>
+            <th>Tipo Operación</th>
+            <th>Posición EUR</th>
+        </tr>
+        {%for movimiento in movimientos%}
+        <tr>
+            
+            <td>{{movimiento[0]}}</td>
+            <td>{{movimiento[1]}}</td>
+            <td>{{movimiento [2]}}</td>
+            <td>{{movimiento[3]}}</td>
+            <td>{% if movimiento[4]==1 %}
+            Compra {% else %} Venta {%endif%}</td>
+            <td>{{movimiento[5]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
 {%endblock%}

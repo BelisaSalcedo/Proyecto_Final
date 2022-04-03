@@ -1,0 +1,39 @@
+{% extends "base.html"%}
+{% block titulo%}
+    Alta de moviento
+{%endblock%}
+
+{%block contenido%}
+    <h1>Alta de Movimiento</h1>
+    <form action="/nuevo_movimiento" method="post">
+        <div class="grid">
+            {{formulario.fecha.label()}}
+            {{formulario.fecha()}}
+        </div>
+        <div class="grid">
+            {{formulario.hora.label()}}
+            {{formulario.hora()}}
+        </div>
+        <div class="grid">
+            {{formulario.moneda_origen.label()}}
+            {{formulario.moneda_origen()}}
+        </div>
+        <div class="grid">
+            {{formulario.cantidad_origen.label()}}
+            {{formulario.cantidad_origen(type="number")}}
+        </div>
+        <div class="grid">
+            {{formulario.moneda_destino.label()}}
+            {{formulario.moneda_destino()}}
+        </div>
+        <div class="grid">
+            {{formulario.cantidad_destino.label()}}
+            {{formulario.cantidad_destino(type="number")}}
+        </div>
+        <div>
+            {{formulario.aceptar()}}
+        </div>
+
+    </form>
+
+{%endblock%}
