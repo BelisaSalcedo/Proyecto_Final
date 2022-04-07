@@ -7,14 +7,8 @@
     <h1>Alta de Movimiento</h1>
     <form action="/nuevo_movimiento" method="post">
         <div class="grid">
-            {{formulario.fecha.label()}}
-            {{formulario.fecha()}}
-        </div>
-        <div class="grid">
-            {{formulario.hora.label()}}
-            {{formulario.hora()}}
-        </div>
-        <div class="grid">
+    
+        
             {{formulario.moneda_origen.label()}}
             {{formulario.moneda_origen()}}
         </div>
@@ -28,10 +22,11 @@
         </div>
         <div class="grid">
             {{formulario.cantidad_destino.label()}}
-            {{formulario.cantidad_destino(type="number")}}
-        </div>
+            {{formulario.cantidad_destino}}
+            
         <div>
             {{formulario.aceptar()}}
+            <a href="/" role="button">Cancelar</a>
         </div>
 
     </form>

@@ -13,6 +13,13 @@
 
         </div>
     </header>
+    <nav class="container">
+        <ul>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/nuevo_movimiento">Nuevo</a></li>
+            <li><a href="/posiciones">estado</a></li>
+        </ul>
+    </nav>
     <section class="container">
         {% with mensajes= get_flashed_messages() %}
             {% if mensajes%}

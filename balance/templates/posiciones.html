@@ -1,0 +1,27 @@
+{% extends "base.html"%}
+{% block titulo%}
+    BALANCE DE CUENTAS
+{%endblock%}
+{%block contenido%}
+    <h1> ESTADO DE TU INVERSIÓN </h1>
+    <table>
+        <tr>
+            <th>Origen de la inversion</th>
+            <th>Posición Ficticia Cripto Monedas</th>
+            <th>Valor Absoluto EUR</th>
+            
+        </tr>
+        {%for movimiento in movimientos%}
+        <tr>
+            
+            <td>{{movimiento[0]}}</td>
+            <td>{{movimiento[1]}}</td>
+            <td>{{movimiento [2]}}</td>
+            <td>{{movimiento[3]}}</td>
+            <td>{% if movimiento[4]==1 %}
+            Compra {% else %} Venta {%endif%}</td>
+            <td>{{movimiento[5]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{%endblock%}
