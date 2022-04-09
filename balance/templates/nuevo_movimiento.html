@@ -22,9 +22,11 @@
         </div>
         <div class="grid">
             {{formulario.cantidad_destino.label()}}
-            {{formulario.cantidad_destino}}
+            {{formulario.cantidad_destino.data}}
+            {{formulario.cantidad_destino_h()}}
             
         <div>
+            {{formulario.calcular()}}
             {{formulario.aceptar()}}
             <a href="/" role="button">Cancelar</a>
         </div>

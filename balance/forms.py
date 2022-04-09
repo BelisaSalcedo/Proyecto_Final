@@ -4,13 +4,13 @@ from sqlite3 import Time
 
 
 from flask_wtf import FlaskForm
-from wtforms import DateField, SelectField,FloatField,SubmitField
+from wtforms import HiddenField, SelectField,FloatField,SubmitField,TextAreaField
 from wtforms.validators import DataRequired, NumberRange,ValidationError
 from datetime import date
 
 def cantidad_valida(formulario, field):
     
-    if field.data < 0:
+    if field.data < 0.000:
         raise ValidationError("Esa cantidad no es valida")
 
 
@@ -25,9 +25,11 @@ class MovimientosForm(FlaskForm):
     moneda_destino=SelectField ("Moneda Origen", validators=[DataRequired()],
                                 choices=[(0,'EUR'), (1,'BTC'), (2,'ETH'), (3,'BNB'),(4,'LUNA'), (5,'SOL'), (6,'BCH'),(7,'LINK'),(8,'ATOM'),(9,'USDT') ])
 
-    cantidad_destino=FloatField("Cantidad Destino",validators=[DataRequired()])
+    cantidad_destino=TextAreaField("Cantidad Destino")
+    cantidad_destino_h=HiddenField("cantidad_destino_h")
     
     aceptar=SubmitField("Aceptar")
+    calcular=SubmitField("Calcular")
 
 
 

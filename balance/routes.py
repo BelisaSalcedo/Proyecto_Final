@@ -31,42 +31,102 @@ def nuevo_movimiento():
         return render_template("nuevo_movimiento.html", formulario=form)
     else:
         #validar
-        try:
-            
-            #recuperar los datos de form y pasarselos al model a grabar
-            data_manager=ProcesaDatos()
-            fecha= (date.today().year)*1000 + date.today().month*100+date.today().day
-            hora=datetime.now().time().hour *10000  + datetime.now().time().minute *100 + datetime.now().time().second 
-            if form.moneda_origen.data =='0':
-                    divisa='EUR'
-            elif form.moneda_origen.data =='1':
-                    divisa='BTC'
-            elif form.moneda_origen.data =='2':
-                    divisa='ETH'
-            elif form.moneda_origen.data =='3':
-                    divisa='BNB'
-            elif form.moneda_origen.data =='4':
-                    divisa='LUNA'
-            elif form.moneda_origen.data =='5':
-                    divisa='SOL'
-            elif form.moneda_origen.data =='6':
-                    divisa='BCH'
-            elif form.moneda_origen.data =='7':
-                    divisa='LINK'
-            elif form.moneda_origen.data =='8':
-                    divisa='ATOM'
-            else: divisa='USDT'
-            cantidad=form.cantidad_origen.data
-            comprueba=data_manager.cantidad_divisa (divisa)
-            if comprueba <0:
-                flash("la cantidad origen no es correcta")
-                return render_template ("nuevo_movimiento.html", formulario=form)
-            else:
+        if form.aceptar.data:
 
-                data_manager.inserta_datos(fecha,hora,divisa,cantidad,0)
-            
-                
-            
+                        try:
+                        
+                        #recuperar los datos de form y pasarselos al model a grabar
+                                data_manager=ProcesaDatos()
+                                fecha= (date.today().year)*1000 + date.today().month*100+date.today().day
+                                hora=datetime.now().time().hour *10000  + datetime.now().time().minute *100 + datetime.now().time().second 
+                                if form.moneda_origen.data =='0':
+                                        divisa='EUR'
+                                elif form.moneda_origen.data =='1':
+                                        divisa='BTC'
+                                elif form.moneda_origen.data =='2':
+                                        divisa='ETH'
+                                elif form.moneda_origen.data =='3':
+                                        divisa='BNB'
+                                elif form.moneda_origen.data =='4':
+                                        divisa='LUNA'
+                                elif form.moneda_origen.data =='5':
+                                        divisa='SOL'
+                                elif form.moneda_origen.data =='6':
+                                        divisa='BCH'
+                                elif form.moneda_origen.data =='7':
+                                        divisa='LINK'
+                                elif form.moneda_origen.data =='8':
+                                        divisa='ATOM'
+                                else: divisa='USDT'
+                                cantidad=form.cantidad_origen.data
+                                #comprueba=data_manager.cantidad_divisa (divisa)
+                                
+                                #if comprueba <0 and divisa!='EUR':
+                                        #flash("la cantidad origen no es correcta")
+                                        #return render_template ("nuevo_movimiento.html", formulario=form)
+                                
+                                data_manager.inserta_datos(fecha,hora,divisa,cantidad,0)
+                        
+                        
+                        
+                                if form.moneda_destino.data =='0':
+                                        divisa2='EUR'
+                                elif form.moneda_destino.data =='1':
+                                        divisa2='BTC'
+                                elif form.moneda_destino.data =='2':
+                                        divisa2='ETH'
+                                elif form.moneda_destino.data =='3':
+                                        divisa2='BNB'
+                                elif form.moneda_destino.data =='4':
+                                        divisa2='LUNA'
+                                elif form.moneda_destino.data =='5':
+                                        divisa2='SOL'
+                                elif form.moneda_destino.data =='6':
+                                        divisa2='BCH'
+                                elif form.moneda_destino.data =='7':
+                                        divisa2='LINK'
+                                elif form.moneda_destino.data =='8':
+                                        divisa2='ATOM'
+                                else: divisa2='USDT'
+                                
+                                cantidad2=form.cantidad_destino_h.data
+                                
+                                data_manager.inserta_datos(fecha,hora,divisa2,cantidad2,1)
+                                return redirect("/")
+                        except sqlite3.Error as e:
+                                flash("se ha producido un error en la bbdd")
+                                return render_template ("movimientos.html", movimientos=[])
+               
+        
+        else:
+                data_manager=ProcesaDatos()
+                if form.moneda_origen.data =='0':
+                                        divisa='EUR'
+                elif form.moneda_origen.data =='1':
+                                        divisa='BTC'
+                elif form.moneda_origen.data =='2':
+                                        divisa='ETH'
+                elif form.moneda_origen.data =='3':
+                                        divisa='BNB'
+                elif form.moneda_origen.data =='4':
+                        divisa='LUNA'
+                elif form.moneda_origen.data =='5':
+                        divisa='SOL'
+                elif form.moneda_origen.data =='6':
+                        divisa='BCH'
+                elif form.moneda_origen.data =='7':
+                        divisa='LINK'
+                elif form.moneda_origen.data =='8':
+                        divisa='ATOM'
+                else: divisa='USDT'
+                cantidad=form.cantidad_origen.data
+                comprueba=data_manager.cantidad_divisa (divisa)
+                                
+                if comprueba <0 and divisa!='EUR':
+                        flash("la cantidad origen no es correcta")
+                        return render_template ("nuevo_movimiento.html", formulario=form)
+
+
                 if form.moneda_destino.data =='0':
                         divisa2='EUR'
                 elif form.moneda_destino.data =='1':
@@ -89,15 +149,11 @@ def nuevo_movimiento():
                 co=ObtenerCambio()
                 cambio=co.obtener_cambio(divisa,divisa2)
                 cantidad2=cambio*cantidad
-                    
-                data_manager.inserta_datos(fecha,hora,divisa2,cantidad2,1)
-                return redirect("/")
-            
+                form.cantidad_destino.data=cantidad2
+                form.cantidad_destino_h.data=cantidad2
+                return render_template("nuevo_movimiento.html", formulario=form)
 
-        
-        except sqlite3.Error as e:
-            flash("se ha producido un error en la bbdd")
-            return render_template ("movimientos.html", movimientos=[])
+                
 
 @app.route("/posiciones", methods=['GET'])
 def estado():
