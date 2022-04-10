@@ -38,7 +38,7 @@ class ProcesaDatos:
         dato= cur.fetchone()
         while dato:
             dato=list(dato)
-            if dato[3] !='EUR':        
+            if dato[2] !='EUR':        
                 tasa=oc.obtener_cambio(dato[2],'EUR')
                 dato[3]=float(dato[3])
                 dato[5]=dato[3]*tasa
@@ -106,3 +106,83 @@ class ProcesaDatos:
             else: return sumresultado
         else: resultado=-100
         return resultado
+    
+    def estado_inversion(self):
+        params=(0,'EUR')
+        con=sqlite3.connect("data/proyecto_final.db")
+        cur =con.cursor()
+        cur.execute("""
+                        select divisa, sum(cantidad)
+                        from movimientos
+                        where tipo_operacion=? and divisa is not ?
+                        group by divisa
+                        
+                        """,params)
+        resta_resultado=cur.fetchone()
+        datos= []
+        while resta_resultado:
+            divisa=resta_resultado[0]
+            params=(1,'EUR',divisa)
+            con=sqlite3.connect("data/proyecto_final.db")
+            cur =con.cursor()
+            cur.execute("""
+                            
+                        select divisa, ifnull(sum(cantidad),0)
+                        from movimientos
+                        where tipo_operacion=? and divisa<>? and divisa=?
+                        group by divisa
+                        
+                        """,params)
+            suma_resultado=cur.fetchone()
+            suma=suma_resultado[1]
+            #con.close()
+            total_divisa=suma-resta_resultado[1]
+            datos.append((divisa,total_divisa))
+            resta_resultado=cur.fetchone()
+        #con.close()
+        i=0
+        oc=ObtenerCambio
+        for dato in datos:           
+           divisa1=dato[0]
+           tasa=0.5
+           #tasa=oc.obtener_cambio(divisa1,'EUR')
+           suma=suma+tasa*(datos[i][1])
+           
+    
+        posicion_cripto_monedas=suma
+        con=sqlite3.connect("data/proyecto_final.db")
+        cur =con.cursor()
+        params=(1,0,'EUR')
+        cur.execute("""
+                            
+                        select m1.divisa, ifnull(sum(m1.cantidad),0)-ifnull(sum(m2.cantidad),0)
+                        from movimientos m1
+                        join movimientos m2 on m1.divisa=m2.divisa
+                        where m1.tipo_operacion=? and m2.tipo_operacion=? and m1.divisa=?
+                        group by 1
+                        
+                        """,params)
+        pos_eur=cur.fetchone()
+        con.close()
+        poseur=pos_eur[1]
+
+        con=sqlite3.connect("data/proyecto_final.db")
+        cur =con.cursor()
+        params=(0,'EUR')
+        cur.execute("""
+                            
+                        select ifnull(sum(cantidad),0)
+                        from movimientos 
+                        where tipo_operacion=? and divisa=?
+                        order by fecha,hora
+                        limit 1
+                        """,params)
+        origen=cur.fetchone()
+        con.close()
+        origen_inv=origen[0]
+        datos=(origen_inv, posicion_cripto_monedas,poseur)
+
+        return datos
+
+
+        

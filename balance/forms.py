@@ -19,11 +19,11 @@ class MovimientosForm(FlaskForm):
    # fecha=DateField ("Fecha", validators=[DataRequired(message='Falta la hora')] )
    # hora=TimeField("Hora", validators=[DataRequired()])
     moneda_origen=SelectField ("Moneda Origen", validators=[DataRequired()],
-                                choices=[(0,'EUR'), (1,'BTC'), (2,'ETH'), (3,'BNB'),(4,'LUNA'), (5,'SOL'), (6,'BCH'),(7,'LINK'),(8,'ATOM'),(9,'USDT') ])
+                                choices=[('EUR','EUR'), ('BTC','BTC'), ('ETH','ETH'), ('BNB','BNB'),('LUNA','LUNA'), ('SOL','SOL'), ('BCH','BCH'),('LINK','LINK'),('ATOM','ATOM'),('USDT','USDT') ])
 
     cantidad_origen=FloatField("Cantidad Origen",validators=[DataRequired(), cantidad_valida])
     moneda_destino=SelectField ("Moneda Origen", validators=[DataRequired()],
-                                choices=[(0,'EUR'), (1,'BTC'), (2,'ETH'), (3,'BNB'),(4,'LUNA'), (5,'SOL'), (6,'BCH'),(7,'LINK'),(8,'ATOM'),(9,'USDT') ])
+                                choices=[('EUR','EUR'), ('BTC','BTC'), ('ETH','ETH'), ('BNB','BNB'),('LUNA','LUNA'), ('SOL','SOL'), ('BCH','BCH'),('LINK','LINK'),('ATOM','ATOM'),('USDT','USDT') ])
 
     cantidad_destino=TextAreaField("Cantidad Destino")
     cantidad_destino_h=HiddenField("cantidad_destino_h")
