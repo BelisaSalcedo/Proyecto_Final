@@ -108,7 +108,8 @@ class ProcesaDatos:
         return resultado
     
     def estado_inversion(self):
-        params=(0,'EUR')
+        oc=ObtenerCambio()
+        params=(1,'EUR')
         con=sqlite3.connect("data/proyecto_final.db")
         cur =con.cursor()
         cur.execute("""
@@ -118,60 +119,77 @@ class ProcesaDatos:
                         group by divisa
                         
                         """,params)
-        resta_resultado=cur.fetchone()
+        suma_resultado=cur.fetchone()
         datos= []
-        while resta_resultado:
-            divisa=resta_resultado[0]
-            params=(1,'EUR',divisa)
+        while suma_resultado:
+            divisa=suma_resultado[0]
+            params=(0,'EUR',divisa)
             con=sqlite3.connect("data/proyecto_final.db")
             cur =con.cursor()
             cur.execute("""
                             
-                        select divisa, ifnull(sum(cantidad),0)
+                        select ifnull(divisa,0), ifnull(sum(cantidad),0)
                         from movimientos
                         where tipo_operacion=? and divisa<>? and divisa=?
                         group by divisa
                         
                         """,params)
-            suma_resultado=cur.fetchone()
-            suma=suma_resultado[1]
-            #con.close()
-            total_divisa=suma-resta_resultado[1]
-            datos.append((divisa,total_divisa))
             resta_resultado=cur.fetchone()
+            if resta_resultado:
+                resta=resta_resultado[1]
+            else: resta=0
+            #con.close()
+            total_divisa=suma_resultado[1]-resta
+            datos.append((divisa,total_divisa))
+            suma_resultado=cur.fetchone()
         #con.close()
         i=0
-        oc=ObtenerCambio
+        suma_cripto=0
+        oc=ObtenerCambio()
         for dato in datos:           
            divisa1=dato[0]
-           tasa=0.5
-           #tasa=oc.obtener_cambio(divisa1,'EUR')
-           suma=suma+tasa*(datos[i][1])
+           
+           tasa=oc.obtener_cambio(divisa1,'EUR')
+           suma_cripto+=tasa*(datos[i][1])
            
     
-        posicion_cripto_monedas=suma
+        posicion_cripto_monedas=suma_cripto
         con=sqlite3.connect("data/proyecto_final.db")
         cur =con.cursor()
-        params=(1,0,'EUR')
+        params_c=(0,'EUR')
         cur.execute("""
                             
-                        select m1.divisa, ifnull(sum(m1.cantidad),0)-ifnull(sum(m2.cantidad),0)
-                        from movimientos m1
-                        join movimientos m2 on m1.divisa=m2.divisa
-                        where m1.tipo_operacion=? and m2.tipo_operacion=? and m1.divisa=?
+                        select divisa, ifnull(sum(cantidad),0)
+                        from movimientos 
+                        where tipo_operacion=? and divisa=?
                         group by 1
                         
-                        """,params)
-        pos_eur=cur.fetchone()
+                        """,params_c)
+        compra_pos_eur=cur.fetchone()
         con.close()
-        poseur=pos_eur[1]
+        con=sqlite3.connect("data/proyecto_final.db")
+        cur =con.cursor()
+        params_v=(1,'EUR')
+        cur.execute("""
+                            
+                        select ifnull(divisa,0), ifnull(sum(cantidad),0)
+                        from movimientos 
+                        where tipo_operacion=? and divisa=?
+                        group by 1
+                        
+                        """,params_v)
+        venta_pos_eur=cur.fetchone()
+        con.close()
+        if venta_pos_eur:
+            poseur=venta_pos_eur[1] - compra_pos_eur[1]
+        else: poseur=compra_pos_eur[1]
 
         con=sqlite3.connect("data/proyecto_final.db")
         cur =con.cursor()
         params=(0,'EUR')
         cur.execute("""
                             
-                        select ifnull(sum(cantidad),0)
+                        select ifnull(cantidad,0)
                         from movimientos 
                         where tipo_operacion=? and divisa=?
                         order by fecha,hora
