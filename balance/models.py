@@ -182,8 +182,8 @@ class ProcesaDatos:
         con.close()
         if compra_pos_eur:
             if venta_pos_eur:
-                poseur=venta_pos_eur[1] - compra_pos_eur[1]
-            else: poseur=compra_pos_eur[1]
+                poseur= compra_pos_eur[1]-venta_pos_eur[1]
+            else: poseur=-compra_pos_eur[1]
         else: poseur=0
 
         con=sqlite3.connect("data/proyecto_final.db")
