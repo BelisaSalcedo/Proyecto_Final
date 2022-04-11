@@ -180,9 +180,11 @@ class ProcesaDatos:
                         """,params_v)
         venta_pos_eur=cur.fetchone()
         con.close()
-        if venta_pos_eur:
-            poseur=venta_pos_eur[1] - compra_pos_eur[1]
-        else: poseur=compra_pos_eur[1]
+        if compra_pos_eur:
+            if venta_pos_eur:
+                poseur=venta_pos_eur[1] - compra_pos_eur[1]
+            else: poseur=compra_pos_eur[1]
+        else: poseur=0
 
         con=sqlite3.connect("data/proyecto_final.db")
         cur =con.cursor()
@@ -197,7 +199,10 @@ class ProcesaDatos:
                         """,params)
         origen=cur.fetchone()
         con.close()
-        origen_inv=origen[0]
+        if origen:
+            origen_inv=origen[0]
+        else:origen_inv=0
+
         datos=(origen_inv, posicion_cripto_monedas,poseur)
 
         return datos

@@ -79,7 +79,7 @@ def nuevo_movimiento():
                 resultado=comprueba-cantidad
                                 
                 if resultado <0 and divisa!='EUR':
-                        flash("la cantidad origen no es correcta")
+                        flash("la cantidad origen no es correcta (no tienes suficientes monedas origen), si es la primera compra debe ser en EUR")
                         return render_template ("nuevo_movimiento.html", formulario=form)
                 else:
                         divisa2=form.moneda_destino.data
