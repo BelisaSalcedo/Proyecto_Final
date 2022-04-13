@@ -46,7 +46,7 @@ class ProcesaDatos:
            
             datos.append(dato)
             dato=cur.fetchone()
-            #hay que cambiar el ultimo campo haciendo la llamada a Apicoin y quietarlo del resultado de la qwery
+            
         
         con.close()
         return datos
@@ -106,7 +106,15 @@ class ProcesaDatos:
             else: return sumresultado
         else: resultado=-100
         return resultado
-    
+    def valida_datos(self,divisa,moneda_origen_h,cantidad, cantidad_origen_h,divisa2,moneda_destino_h):
+        cantidad_origen_h=float(cantidad_origen_h)
+        cantidad=float(cantidad)
+
+        if divisa==moneda_origen_h and cantidad==cantidad_origen_h and divisa2==moneda_destino_h:
+            resultado=True
+        else: resultado=False
+        return resultado
+
     def estado_inversion(self):
         oc=ObtenerCambio()
         params=(1,'EUR')
@@ -182,7 +190,7 @@ class ProcesaDatos:
         con.close()
         if compra_pos_eur:
             if venta_pos_eur:
-                poseur= compra_pos_eur[1]-venta_pos_eur[1]
+                poseur= venta_pos_eur[1]-compra_pos_eur[1]
             else: poseur=-compra_pos_eur[1]
         else: poseur=0
 

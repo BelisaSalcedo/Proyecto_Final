@@ -37,32 +37,40 @@ def nuevo_movimiento():
                         
                         #recuperar los datos de form y pasarselos al model a grabar
                                 data_manager=ProcesaDatos()
-                                fecha= (date.today().year)*1000 + date.today().month*100+date.today().day
-                                hora=datetime.now().time().hour *10000  + datetime.now().time().minute *100 + datetime.now().time().second 
+                                fecha=datetime.now().date()
+                                
+                               # fecha= (date.today().year)*1000 + date.today().month*100+date.today().day
+                                hora=str(datetime.now().time().hour)+":" + str(datetime.now().time().minute) +":"+ str(datetime.now().time().second)
+                                
                                 divisa=form.moneda_origen.data
                                 
+                                
                                 cantidad=form.cantidad_origen.data
+                              
                                 #comprueba=data_manager.cantidad_divisa (divisa)
                                 
                                 #if comprueba <0 and divisa!='EUR':
                                         #flash("la cantidad origen no es correcta")
                                         #return render_template ("nuevo_movimiento.html", formulario=form)
-                                
-                                data_manager.inserta_datos(fecha,hora,divisa,cantidad,0)
-                        
-                        
-                        
+                                               
                                 
                                 divisa2=form.moneda_destino.data
-                               
-                                if form.cantidad_destino_h.data:
-                                        cantidad2=form.cantidad_destino_h.data
-                                        
-                                        data_manager.inserta_datos(fecha,hora,divisa2,cantidad2,1)
-                                        return redirect("/")
-                                else: 
-                                        flash("No tenemos cantidad destino. Tienes que darle a clacular")
-                                        return render_template("nuevo_movimiento.html", formulario=form)
+                                
+                                coherencia=data_manager.valida_datos(divisa,form.moneda_origen_h.data,cantidad, form.cantidad_origen_h.data,divisa2,form.moneda_destino_h.data)
+                                if coherencia:
+
+                                    if form.cantidad_destino_h.data:
+                                            data_manager.inserta_datos(fecha,hora,divisa,cantidad,0)
+                                            cantidad2=form.cantidad_destino_h.data
+                                            
+                                            data_manager.inserta_datos(fecha,hora,divisa2,cantidad2,1)
+                                            return redirect("/")
+                                    else: 
+                                            flash("No tenemos cantidad destino. Tienes que darle a clacular")
+                                            return render_template("nuevo_movimiento.html", formulario=form)
+                                else:
+                                    flash("has cambiado los datos sin dar a calcular")
+                                    return render_template("nuevo_movimiento.html", formulario=form)
                         except sqlite3.Error as e:
                                 flash("se ha producido un error en la bbdd")
                                 return render_template ("movimientos.html", movimientos=[])
@@ -72,23 +80,34 @@ def nuevo_movimiento():
                 data_manager=ProcesaDatos()
                 
                 divisa=form.moneda_origen.data
+                form.moneda_origen_h.data=divisa
      
                 
                 cantidad=form.cantidad_origen.data
+                form.cantidad_origen_h.data=cantidad
                 comprueba=data_manager.cantidad_divisa (divisa)
                 resultado=comprueba-cantidad
                                 
                 if resultado <0 and divisa!='EUR':
                         flash("la cantidad origen no es correcta (no tienes suficientes monedas origen), si es la primera compra debe ser en EUR")
                         return render_template ("nuevo_movimiento.html", formulario=form)
+                
                 else:
+
                         divisa2=form.moneda_destino.data
-                        co=ObtenerCambio()
-                        cambio=co.obtener_cambio(divisa,divisa2)
-                        cantidad2=cambio*cantidad
-                        form.cantidad_destino.data=cantidad2
-                        form.cantidad_destino_h.data=cantidad2
-                        return render_template("nuevo_movimiento.html", formulario=form)
+                        form.moneda_destino_h.data=divisa2
+                        if divisa2==divisa:
+                            flash("la divisa origen es igual a la divisa destino")
+                            return render_template ("nuevo_movimiento.html", formulario=form)
+                        else:
+
+                            co=ObtenerCambio()
+                            cambio=co.obtener_cambio(divisa,divisa2)
+                            cantidad2=cambio*cantidad
+                            
+                            form.cantidad_destino.data=cantidad2
+                            form.cantidad_destino_h.data=cantidad2
+                            return render_template("nuevo_movimiento.html", formulario=form)
 
                 
 
