@@ -13,15 +13,19 @@ from datetime import datetime,date
 @app.route("/")
 def inicio():
     data_manager=ProcesaDatos()
+   
     
  
     
+
     try:
         datos=data_manager.recupera_datos()
+        
         return render_template("movimientos.html", movimientos=datos)
     except sqlite3.Error as e:
-        flash ("Se ha producido un error en la bbdd.Intentelo de nuevo")
-        return render_template("movimientos.html", movimientos=[])      
+            flash ("Se ha producido un error en la bbdd.Intentelo de nuevo o no se ha podido conectar a la API revisa tu APIKEY")
+            return render_template("movimientos.html", movimientos=[]) 
+    
 
 @app.route("/nuevo_movimiento", methods=['GET','POST'])
 
@@ -102,7 +106,11 @@ def nuevo_movimiento():
                         else:
 
                             co=ObtenerCambio()
-                            cambio=co.obtener_cambio(divisa,divisa2)
+                            try:
+                                cambio=co.obtener_cambio(divisa,divisa2)
+                            except:
+                                flash("No se puede conectar a la APPI, comprueba tu API_KEY")
+                                return redirect("/")
                             cantidad2=cambio*cantidad
                             
                             form.cantidad_destino.data=cantidad2
@@ -118,6 +126,6 @@ def estado():
         datos=data_manager.estado_inversion()
         return render_template("posiciones.html", movimientos=datos)
     except sqlite3.Error as e:
-        flash ("Se ha producido un error en la bbdd.Intentelo de nuevo")
+        flash ("Se ha producido un error en la bbdd.Intentelo de nuevo o no se ha podido conectar a la API")
         return render_template("posiciones.html", movimientos=[]) 
    

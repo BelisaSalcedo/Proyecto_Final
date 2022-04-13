@@ -12,12 +12,15 @@ class ObtenerCambio:
     def obtener_cambio( self,origen, destino):
         self.origen=origen
         self.destino=destino
-        try:
-            respuesta=requests.get(URL_TASA_ESPECIFICA .format(self.origen,self.destino,API_KEY))
+        
+        respuesta=requests.get(URL_TASA_ESPECIFICA .format(self.origen,self.destino,API_KEY))
+        if respuesta.status_code ==200:
             cambio=respuesta.json()["rate"]
             return cambio
-        except:
+        else:
+            
             raise APIError(respuesta.status_code)
+            
         
 
 class ProcesaDatos:
@@ -38,10 +41,11 @@ class ProcesaDatos:
         dato= cur.fetchone()
         while dato:
             dato=list(dato)
-            if dato[2] !='EUR':        
+            if dato[2] !='EUR':
                 tasa=oc.obtener_cambio(dato[2],'EUR')
                 dato[3]=float(dato[3])
                 dato[5]=dato[3]*tasa
+              
             else: dato[5]=dato[3]
            
             datos.append(dato)
