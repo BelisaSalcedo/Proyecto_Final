@@ -1,17 +1,22 @@
 
-from fileinput import close
+from  config import RUTA_BBDD
 import sqlite3
 import requests
 
 from flask import flash, request
 
-from balance import  URL_TASA_ESPECIFICA
-from balance.config import API_KEY
+from balance import  URL_TASA_ESPECIFICA,app
+from config import API_KEY
 from balance.errors import APIError
+
+
+ruta_db=app.config['RUTA_BBDD']
+
 class ObtenerCambio:
     def obtener_cambio( self,origen, destino):
         self.origen=origen
         self.destino=destino
+        
         
         respuesta=requests.get(URL_TASA_ESPECIFICA .format(self.origen,self.destino,API_KEY))
         if respuesta.status_code ==200:
@@ -20,6 +25,8 @@ class ObtenerCambio:
         else:
             
             raise APIError(respuesta.status_code)
+           
+
             
         
 
@@ -27,7 +34,7 @@ class ProcesaDatos:
     def recupera_datos(self) :
         oc=ObtenerCambio()
         
-        con=sqlite3.connect("data/proyecto_final.db")
+        con=sqlite3.connect(ruta_db)
         cur =con.cursor()
         cur.execute("""
                         select fecha, hora, divisa, cantidad,tipo_operacion ,cantidad*1
@@ -56,7 +63,7 @@ class ProcesaDatos:
         return datos
     
     def inserta_datos (self,fecha,hora,divisa,cantidad,tipo_operacion):
-        con=sqlite3.connect("data/proyecto_final.db")
+        con=sqlite3.connect(ruta_db)
         cur =con.cursor()
 
         cur.execute ("""
@@ -69,7 +76,7 @@ class ProcesaDatos:
     
     def cantidad_divisa(self,divisa) :
         params=[1,divisa]
-        con=sqlite3.connect("data/proyecto_final.db")
+        con=sqlite3.connect(ruta_db)
         cur =con.cursor()
         cur.execute("""
                     select divisa, sum(cantidad)
@@ -88,7 +95,7 @@ class ProcesaDatos:
 
             
             params=(0,divisa)
-            con=sqlite3.connect("data/proyecto_final.db")
+            con=sqlite3.connect(ruta_db)
             cur =con.cursor()
             r=cur.execute("""
                             
@@ -122,7 +129,7 @@ class ProcesaDatos:
     def estado_inversion(self):
         oc=ObtenerCambio()
         params=(1,'EUR')
-        con=sqlite3.connect("data/proyecto_final.db")
+        con=sqlite3.connect(ruta_db)
         cur =con.cursor()
         cur.execute("""
                         select divisa, sum(cantidad)
@@ -136,7 +143,7 @@ class ProcesaDatos:
         while suma_resultado:
             divisa=suma_resultado[0]
             params=(0,'EUR',divisa)
-            con=sqlite3.connect("data/proyecto_final.db")
+            con=sqlite3.connect(ruta_db)
             cur =con.cursor()
             cur.execute("""
                             
@@ -166,7 +173,7 @@ class ProcesaDatos:
            
     
         posicion_cripto_monedas=suma_cripto
-        con=sqlite3.connect("data/proyecto_final.db")
+        con=sqlite3.connect(ruta_db)
         cur =con.cursor()
         params_c=(0,'EUR')
         cur.execute("""
@@ -179,7 +186,7 @@ class ProcesaDatos:
                         """,params_c)
         compra_pos_eur=cur.fetchone()
         con.close()
-        con=sqlite3.connect("data/proyecto_final.db")
+        con=sqlite3.connect(ruta_db)
         cur =con.cursor()
         params_v=(1,'EUR')
         cur.execute("""
@@ -198,7 +205,7 @@ class ProcesaDatos:
             else: poseur=-compra_pos_eur[1]
         else: poseur=0
 
-        con=sqlite3.connect("data/proyecto_final.db")
+        con=sqlite3.connect(ruta_db)
         cur =con.cursor()
         params=(0,'EUR')
         cur.execute("""
