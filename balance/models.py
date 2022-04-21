@@ -23,8 +23,7 @@ class ObtenerCambio:
             cambio=respuesta.json()["rate"]
             return cambio
         else:
-            
-            raise APIError(respuesta.status_code)
+            raise APIError
            
 
             

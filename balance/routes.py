@@ -23,6 +23,9 @@ def inicio():
     except sqlite3.Error as e:
             flash ("Se ha producido un error en la bbdd.")
             return render_template("movimientos.html", movimientos=[]) 
+    except APIError:
+        flash ("Se ha producido un error con la conexion a la APICOIN, compruebe su API_KEY.")
+        return render_template("movimientos.html", movimientos=[]) 
     
 
 @app.route("/nuevo_movimiento", methods=['GET','POST'])
@@ -36,9 +39,7 @@ def nuevo_movimiento():
         if form.aceptar.data:
 
                         try:
-                        
-                            
-                        
+
                             #recuperar los datos de form y pasarselos al model a grabar
                                     data_manager=ProcesaDatos()
                                     fecha=datetime.now().date()
@@ -124,4 +125,6 @@ def estado():
     except sqlite3.Error as e:
         flash ("Se ha producido un error en la bbdd")
         return render_template("posiciones.html", movimientos=[]) 
-   
+    except APIError:
+        flash ("No se puede conectar a la APPI, comprueba tu API_KEY")
+        return render_template("posiciones.html", movimientos=[]) 
