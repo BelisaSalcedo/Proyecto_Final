@@ -25,8 +25,14 @@
         </div>
         <div class="grid">
             {{formulario.cantidad_destino.label()}}
-            {{formulario.cantidad_destino.data}}
-            {{formulario.cantidad_destino_h()}}
+            {%if formulario.cantidad_destino.data==None%}
+                
+            0
+            {%else%}
+
+                {{formulario.cantidad_destino.data}}
+                {{formulario.cantidad_destino_h()}}
+            {%endif%}
             
         <div>
             {{formulario.calcular()}}

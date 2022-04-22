@@ -15,9 +15,26 @@
     </header>
     <nav class="container">
         <ul>
-            <li><a href="/">Inicio</a></li>
-            <li><a href="/nuevo_movimiento">Nuevo</a></li>
-            <li><a href="/posiciones">estado</a></li>
+            <li>{%if menu=='Inicio'%}
+                Inicio
+                
+                <li><a href="/nuevo_movimiento">Nuevo</a></li>
+                <li><a href="/posiciones">estado</a></li>
+                {%endif%}
+                
+                {%if menu=='Nuevo'%}
+                <li><a href="/">Inicio</a></li>
+                Nuevo
+                <li><a href="/posiciones">estado</a></li>
+                {%endif%}
+
+                {%if menu=='estado'%}
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/nuevo_movimiento">Nuevo</a></li>
+                estado
+                {%endif%}
+
+
         </ul>
     </nav>
     <section class="container">

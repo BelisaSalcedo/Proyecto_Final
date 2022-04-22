@@ -19,13 +19,13 @@ def inicio():
     try:
         datos=data_manager.recupera_datos()
         
-        return render_template("movimientos.html", movimientos=datos)
+        return render_template("movimientos.html", movimientos=datos, menu="Inicio")
     except sqlite3.Error as e:
             flash ("Se ha producido un error en la bbdd.")
-            return render_template("movimientos.html", movimientos=[]) 
+            return render_template("movimientos.html", movimientos=[],menu="Inicio") 
     except APIError:
         flash ("Se ha producido un error con la conexion a la APICOIN, compruebe su API_KEY.")
-        return render_template("movimientos.html", movimientos=[]) 
+        return render_template("movimientos.html", movimientos=[],menu="Inicio") 
     
 
 @app.route("/nuevo_movimiento", methods=['GET','POST'])
@@ -33,7 +33,7 @@ def inicio():
 def nuevo_movimiento():
     form=MovimientosForm()
     if request.method =='GET':
-        return render_template("nuevo_movimiento.html", formulario=form)
+        return render_template("nuevo_movimiento.html", formulario=form,menu="Nuevo")
     else:
         #validar
         if form.aceptar.data:
@@ -60,16 +60,16 @@ def nuevo_movimiento():
                                                 return redirect("/")
                                         else: 
                                                 flash("No tenemos cantidad destino. Tienes que darle a clacular")
-                                                return render_template("nuevo_movimiento.html", formulario=form)
+                                                return render_template("nuevo_movimiento.html", formulario=form,menu="Nuevo")
                                     else:
                                         flash("has cambiado los datos sin dar a calcular")
                         
-                                        return render_template("nuevo_movimiento.html", formulario=form)
+                                        return render_template("nuevo_movimiento.html", formulario=form,menu="Nuevo")
                            
 
                         except sqlite3.Error as e:
                                 flash("se ha producido un error en la bbdd")
-                                return render_template ("movimientos.html", movimientos=[])
+                                return render_template ("movimientos.html", movimientos=[],menu="Nuevo")
                         
                
         
@@ -87,7 +87,7 @@ def nuevo_movimiento():
                                 
                 if resultado <0 and divisa!='EUR':
                         flash("la cantidad origen no es correcta (no tienes suficientes monedas origen), si es la primera compra debe ser en EUR")
-                        return render_template ("nuevo_movimiento.html", formulario=form)
+                        return render_template ("nuevo_movimiento.html", formulario=form,menu="Nuevo")
                 
                 else:
 
@@ -95,7 +95,7 @@ def nuevo_movimiento():
                         form.moneda_destino_h.data=divisa2
                         if divisa2==divisa:
                             flash("la divisa origen es igual a la divisa destino")
-                            return render_template ("nuevo_movimiento.html", formulario=form)
+                            return render_template ("nuevo_movimiento.html", formulario=form,menu="Nuevo")
                         else:
 
                             co=ObtenerCambio()
@@ -103,12 +103,12 @@ def nuevo_movimiento():
                                 cambio=co.obtener_cambio(divisa,divisa2)
                             except:
                                 flash("No se puede conectar a la APPI, comprueba tu API_KEY")
-                                return render_template ("nuevo_movimiento.html", formulario=form)
+                                return render_template ("nuevo_movimiento.html", formulario=form,menu="Nuevo")
                             cantidad2=cambio*cantidad
                             
                             form.cantidad_destino.data=cantidad2
                             form.cantidad_destino_h.data=cantidad2
-                            return render_template("nuevo_movimiento.html", formulario=form)
+                            return render_template("nuevo_movimiento.html", formulario=form,menu="Nuevo")
 
                 
 
@@ -120,11 +120,11 @@ def estado():
     try:
         datos=data_manager.estado_inversion()
        
-        return render_template("posiciones.html", movimientos=datos)
+        return render_template("posiciones.html", movimientos=datos,menu="estado")
 
     except sqlite3.Error as e:
         flash ("Se ha producido un error en la bbdd")
-        return render_template("posiciones.html", movimientos=[]) 
+        return render_template("posiciones.html", movimientos=[],menu="estado") 
     except APIError:
         flash ("No se puede conectar a la APPI, comprueba tu API_KEY")
-        return render_template("posiciones.html", movimientos=[]) 
+        return render_template("posiciones.html", movimientos=[],menu="estado") 

@@ -4,6 +4,7 @@
 {%endblock%}
 {%block contenido%}
     <h1> Listado de movimientos </h1>
+    {%if movimientos%}
     <table>
         <tr>
             <th>Fecha</th>
@@ -13,17 +14,21 @@
             <th>Tipo Operación</th>
             <th>Posición EUR</th>
         </tr>
-        {%for movimiento in movimientos%}
-        <tr>
-            
-            <td>{{movimiento[0]}}</td>
-            <td>{{movimiento[1]}}</td>
-            <td>{{movimiento [2]}}</td>
-            <td>{{movimiento[3]}}</td>
-            <td>{% if movimiento[4]==1 %}
-            Compra {% else %} Venta {%endif%}</td>
-            <td>{{movimiento[5]}}</td>
-        </tr>
-        {% endfor %}
+        
+            {%for movimiento in movimientos%}
+            <tr>
+                
+                <td>{{movimiento[0]}}</td>
+                <td>{{movimiento[1]}}</td>
+                <td>{{movimiento [2]}}</td>
+                <td>{{movimiento[3]}}</td>
+                <td>{% if movimiento[4]==1 %}
+                Compra {% else %} Venta {%endif%}</td>
+                <td>{{movimiento[5]}}</td>
+            </tr>
+            {% endfor %}
     </table>
+        {%else%}
+        <h1>No hay moviemientos todavia</h1>
+        {%endif%}
 {%endblock%}
