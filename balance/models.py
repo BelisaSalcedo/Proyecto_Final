@@ -36,7 +36,7 @@ class ProcesaDatos:
         con=sqlite3.connect(ruta_db)
         cur =con.cursor()
         cur.execute("""
-                        select fecha, hora, divisa, cantidad,tipo_operacion ,cantidad*1
+                        select fecha, hora, divisa, cantidad,tipo_operacion ,cantidad*1, tasa, divisa_origen
                         from movimientos
                         order by fecha,hora, tipo_operacion
                         """
@@ -61,14 +61,14 @@ class ProcesaDatos:
         con.close()
         return datos
     
-    def inserta_datos (self,fecha,hora,divisa,cantidad,tipo_operacion):
+    def inserta_datos (self,fecha,hora,divisa,cantidad,tipo_operacion,tasa,divisa_origen):
         con=sqlite3.connect(ruta_db)
         cur =con.cursor()
 
         cur.execute ("""
-                    Insert into movimientos (fecha,hora,divisa,cantidad,tipo_operacion)
-                    values (?,?,?,?,?)
-                    """ ,( fecha,hora,divisa,cantidad,tipo_operacion))
+                    Insert into movimientos (fecha,hora,divisa,cantidad,tipo_operacion,tasa,divisa_origen)
+                    values (?,?,?,?,?,?,?)
+                    """ ,( fecha,hora,divisa,cantidad,tipo_operacion,tasa,divisa_origen))
         
         con.commit()
         con.close()
@@ -220,8 +220,9 @@ class ProcesaDatos:
         if origen:
             origen_inv=origen[0]
         else:origen_inv=0
+        beneficio=poseur+posicion_cripto_monedas
 
-        datos=(origen_inv, posicion_cripto_monedas,poseur)
+        datos=(origen_inv, posicion_cripto_monedas,poseur,beneficio)
 
         return datos
 

@@ -12,7 +12,10 @@
             <th>Divisa</th>
             <th>Cantidad</th>
             <th>Tipo Operación</th>
-            <th>Posición EUR</th>
+            <th>Posición EUR(Actual)</th>
+            <th>Tasa(Momento de compra)</th>
+            <th>Divisa origen</th>
+
         </tr>
         
             {%for movimiento in movimientos%}
@@ -25,6 +28,12 @@
                 <td>{% if movimiento[4]==1 %}
                 Compra {% else %} Venta {%endif%}</td>
                 <td>{{movimiento[5]}}</td>
+                <td>{% if movimiento[4]==0 %}
+                    -- {% else %} {{movimiento[6]}} {%endif%}</td>
+                <td>{% if movimiento[4]==0 %}
+                    -- {% else %} {{movimiento[7]}} {%endif%}</td>
+                
+               
             </tr>
             {% endfor %}
     </table>

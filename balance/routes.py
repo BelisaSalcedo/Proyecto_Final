@@ -49,15 +49,15 @@ def nuevo_movimiento():
                                     divisa=form.moneda_origen.data                            
                                     cantidad=form.cantidad_origen.data
                                     divisa2=form.moneda_destino.data
-                                    tasa=form.tasa.data
+                                    tasa=form.tasa_h.data
                                     coherencia=data_manager.valida_datos(divisa,form.moneda_origen_h.data,cantidad, form.cantidad_origen_h.data,divisa2,form.moneda_destino_h.data)
                                     if coherencia:
 
                                         if form.cantidad_destino_h.data:
-                                                data_manager.inserta_datos(fecha,hora,divisa,cantidad,0)
+                                                data_manager.inserta_datos(fecha,hora,divisa,cantidad,0,1,divisa)
                                                 cantidad2=form.cantidad_destino_h.data
                                                 
-                                                data_manager.inserta_datos(fecha,hora,divisa2,cantidad2,1)
+                                                data_manager.inserta_datos(fecha,hora,divisa2,cantidad2,1,tasa,divisa)
                                                 return redirect("/")
                                         else: 
                                                 flash("No tenemos cantidad destino. Tienes que darle a clacular")
