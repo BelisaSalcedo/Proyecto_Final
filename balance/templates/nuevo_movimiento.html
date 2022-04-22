@@ -33,6 +33,18 @@
                 {{formulario.cantidad_destino.data}}
                 {{formulario.cantidad_destino_h()}}
             {%endif%}
+        <div class="grid">
+            {{formulario.tasa.label()}}
+            {%if formulario.tasa.data==None%}
+                
+            0
+            {%else%}
+
+                {{formulario.tasa.data}}
+                {{formulario.tasa_h()}}
+            {%endif%}
+
+        </div>
             
         <div>
             {{formulario.calcular()}}

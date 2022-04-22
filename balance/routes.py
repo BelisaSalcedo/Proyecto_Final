@@ -49,6 +49,7 @@ def nuevo_movimiento():
                                     divisa=form.moneda_origen.data                            
                                     cantidad=form.cantidad_origen.data
                                     divisa2=form.moneda_destino.data
+                                    tasa=form.tasa.data
                                     coherencia=data_manager.valida_datos(divisa,form.moneda_origen_h.data,cantidad, form.cantidad_origen_h.data,divisa2,form.moneda_destino_h.data)
                                     if coherencia:
 
@@ -104,6 +105,8 @@ def nuevo_movimiento():
                             except:
                                 flash("No se puede conectar a la APPI, comprueba tu API_KEY")
                                 return render_template ("nuevo_movimiento.html", formulario=form,menu="Nuevo")
+                            form.tasa.data=cambio
+                            form.tasa_h.data=cambio
                             cantidad2=cambio*cantidad
                             
                             form.cantidad_destino.data=cantidad2

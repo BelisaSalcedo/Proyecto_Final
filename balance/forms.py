@@ -28,6 +28,8 @@ class MovimientosForm(FlaskForm):
     moneda_destino_h=HiddenField("Moneda Destino H")
     cantidad_destino=TextAreaField("Cantidad Destino")
     cantidad_destino_h=HiddenField("cantidad_destino_h")
+    tasa=TextAreaField("Precio Unitario")
+    tasa_h=HiddenField("Precio_Unitario_h")
     
     aceptar=SubmitField("Aceptar")
     calcular=SubmitField("Calcular")
