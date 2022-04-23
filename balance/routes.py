@@ -24,7 +24,7 @@ def inicio():
             flash ("Se ha producido un error en la bbdd.")
             return render_template("movimientos.html", movimientos=[],menu="Inicio") 
     except APIError:
-        flash ("Se ha producido un error con la conexion a la APICOIN, compruebe su API_KEY.")
+        flash ("Se ha producido un error con la conexión a la APICOIN, compruebe su API_KEY.")
         return render_template("movimientos.html", movimientos=[],menu="Inicio") 
     
 
@@ -51,7 +51,10 @@ def nuevo_movimiento():
                                     divisa2=form.moneda_destino.data
                                     tasa=form.tasa_h.data
                                     coherencia=data_manager.valida_datos(divisa,form.moneda_origen_h.data,cantidad, form.cantidad_origen_h.data,divisa2,form.moneda_destino_h.data)
-                                    if coherencia:
+                                    if cantidad<0:
+                                        flash ("la cantidad de origen debe ser positiva")
+                                        return render_template("nuevo_movimiento.html", formulario=form,menu="Nuevo")
+                                    elif coherencia:
 
                                         if form.cantidad_destino_h.data:
                                                 data_manager.inserta_datos(fecha,hora,divisa,cantidad,0,1,divisa)
@@ -61,7 +64,9 @@ def nuevo_movimiento():
                                                 return redirect("/")
                                         else: 
                                                 flash("No tenemos cantidad destino. Tienes que darle a clacular")
+                                    
                                                 return render_template("nuevo_movimiento.html", formulario=form,menu="Nuevo")
+                                    
                                     else:
                                         flash("has cambiado los datos sin dar a calcular")
                         
@@ -103,11 +108,11 @@ def nuevo_movimiento():
                             try:
                                 cambio=co.obtener_cambio(divisa,divisa2)
                             except:
-                                flash("No se puede conectar a la APPI, comprueba tu API_KEY")
+                                flash("No se puede conectar a la COINAPPI, comprueba tu API_KEY")
                                 return render_template ("nuevo_movimiento.html", formulario=form,menu="Nuevo")
                             form.tasa.data=cambio
-                            form.tasa_h.data=cambio
-                            cantidad2=cambio*cantidad
+                            form.tasa_h.data=round (cambio,9)
+                            cantidad2=round (cambio*cantidad,9)
                             
                             form.cantidad_destino.data=cantidad2
                             form.cantidad_destino_h.data=cantidad2

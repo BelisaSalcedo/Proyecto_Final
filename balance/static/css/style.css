@@ -1,0 +1,7 @@
+table.movimientos {
+    height: 40vh;
+    display: block;
+    overflow-y: auto;
+    background-color: rgb(80, 203, 203);
+    
+}

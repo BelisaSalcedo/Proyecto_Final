@@ -5,7 +5,7 @@
 {%block contenido%}
     <h1> Listado de movimientos </h1>
     {%if movimientos%}
-    <table>
+    <table class="movimientos">
         <tr>
             <th>Fecha</th>
             <th>Hora</th>
@@ -38,6 +38,6 @@
             {% endfor %}
     </table>
         {%else%}
-        <h1>No hay moviemientos todavia</h1>
+        <h1>No hay moviemientos todavía</h1>
         {%endif%}
 {%endblock%}

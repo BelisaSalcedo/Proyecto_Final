@@ -1,0 +1,11 @@
+CREATE TABLE "movimientos" (
+	"id"	INTEGER NOT NULL,
+	"fecha"	TEXT NOT NULL,
+	"hora"	TEXT NOT NULL,
+	"divisa"	TEXT NOT NULL,
+	"cantidad"	REAL NOT NULL,
+	"tipo_operacion"	INTEGER NOT NULL,
+	"tasa"	REAL NOT NULL,
+	"divisa_origen"	TEXT NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT)
+)

@@ -1,28 +1,42 @@
 {% extends "base.html"%}
 {% block titulo%}
-    Alta de moviento
+    Compra de Crytos
 {%endblock%}
 
 {%block contenido%}
-    <h1>Alta de Movimiento</h1>
+    <h1>Compra de Crytos</h1>
+    <table class = "default">
+
     <form action="/nuevo_movimiento" method="post">
+        <tr>
+            <td>
         <div class="grid">
-    
         
             {{formulario.moneda_origen.label()}}
             {{formulario.moneda_origen()}}
             {{formulario.moneda_origen_h()}}
         </div>
+            </td>
+            <td>
+                <div class="grid">
+                    {{formulario.moneda_destino.label()}}
+                    {{formulario.moneda_destino()}}
+                    {{formulario.moneda_destino_h()}}
+                </div>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
         <div class="grid">
+            
             {{formulario.cantidad_origen.label()}}
             {{formulario.cantidad_origen(type="number", step="0.0000000001" ) }}
             {{formulario.cantidad_origen_h()}}
+            
         </div>
-        <div class="grid">
-            {{formulario.moneda_destino.label()}}
-            {{formulario.moneda_destino()}}
-            {{formulario.moneda_destino_h()}}
-        </div>
+            </td>
+        <td>
         <div class="grid">
             {{formulario.cantidad_destino.label()}}
             {%if formulario.cantidad_destino.data==None%}
@@ -33,25 +47,40 @@
                 {{formulario.cantidad_destino.data}}
                 {{formulario.cantidad_destino_h()}}
             {%endif%}
-        <div class="grid">
-            {{formulario.tasa.label()}}
-            {%if formulario.tasa.data==None%}
-                
-            0
-            {%else%}
-
-                {{formulario.tasa.data}}
-                {{formulario.tasa_h()}}
-            {%endif%}
+        
 
         </div>
-            
+           
         <div>
             {{formulario.calcular()}}
+        </td>
+        </tr>
+        <tr>
+            
+            <td></td>
+            <td>
+            <div class="grid">
+                {{formulario.tasa.label()}}
+                {%if formulario.tasa.data==None%}
+                    
+                0
+                {%else%}
+    
+                    {{formulario.tasa.data}}
+                    {{formulario.tasa_h()}}
+                {%endif%}
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
             {{formulario.aceptar()}}
+            
             <a href="/" role="button">Cancelar</a>
+            </td>
+        </tr>
         </div>
 
     </form>
-
+</table>
 {%endblock%}

@@ -38,7 +38,7 @@ class ProcesaDatos:
         cur.execute("""
                         select fecha, hora, divisa, cantidad,tipo_operacion ,cantidad*1, tasa, divisa_origen
                         from movimientos
-                        order by fecha,hora, tipo_operacion
+                        order by fecha,hora,hora, tipo_operacion
                         """
             )
                         
@@ -49,10 +49,14 @@ class ProcesaDatos:
             dato=list(dato)
             if dato[2] !='EUR':
                 tasa=oc.obtener_cambio(dato[2],'EUR')
-                dato[3]=float(dato[3])
-                dato[5]=dato[3]*tasa
+                dato[3]=round(float(dato[3]),9)
+                dato[5]=round(dato[3]*tasa,9)
+                dato[6]=round(dato[6],9)
               
-            else: dato[5]=dato[3]
+            else:
+                dato[3]=round(dato[3],9) 
+                dato[5]=round(dato[3],9)
+                dato[6]=round(dato[6],9)
            
             datos.append(dato)
             dato=cur.fetchone()
@@ -112,10 +116,10 @@ class ProcesaDatos:
                 restaresultado=float(resta_resultado[0][1])
                 resultado=sumresultado-restaresultado
 
-                return resultado
-            else: return sumresultado
+                return round(resultado,9)
+            else: return round(sumresultado,9)
         else: resultado=-100
-        return resultado
+        return round (resultado,9)
     def valida_datos(self,divisa,moneda_origen_h,cantidad, cantidad_origen_h,divisa2,moneda_destino_h):
         cantidad_origen_h=float(cantidad_origen_h)
         cantidad=float(cantidad)
@@ -171,7 +175,7 @@ class ProcesaDatos:
            suma_cripto+=tasa*(datos[i][1])
            
     
-        posicion_cripto_monedas=suma_cripto
+        posicion_cripto_monedas=round(suma_cripto,9)
         con=sqlite3.connect(ruta_db)
         cur =con.cursor()
         params_c=(0,'EUR')
@@ -200,8 +204,8 @@ class ProcesaDatos:
         con.close()
         if compra_pos_eur:
             if venta_pos_eur:
-                poseur= venta_pos_eur[1]-compra_pos_eur[1]
-            else: poseur=-compra_pos_eur[1]
+                poseur= round(venta_pos_eur[1]-compra_pos_eur[1],9)
+            else: poseur=round(-compra_pos_eur[1],9)
         else: poseur=0
 
         con=sqlite3.connect(ruta_db)
@@ -220,7 +224,7 @@ class ProcesaDatos:
         if origen:
             origen_inv=origen[0]
         else:origen_inv=0
-        beneficio=poseur+posicion_cripto_monedas
+        beneficio=round (poseur+posicion_cripto_monedas,9)
 
         datos=(origen_inv, posicion_cripto_monedas,poseur,beneficio)
 
