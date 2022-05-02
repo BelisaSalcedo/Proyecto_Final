@@ -10,3 +10,4 @@
     * Ruta base de datos:
         - hay un fichero llamado create_table que debes ejutar en tu bbdd para crear la tabla.
         - poner la ruta de la base de datos con la tabla que acabamos de poner en la parte del config.
+        

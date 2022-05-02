@@ -141,10 +141,11 @@ class ProcesaDatos:
                         group by divisa
                         
                         """,params)
-        suma_resultado=cur.fetchone()
+        suma_resultado=cur.fetchall()
         datos= []
-        while suma_resultado:
-            divisa=suma_resultado[0]
+        i=0
+        while suma_resultado and i<len (suma_resultado):
+            divisa=suma_resultado[i][0]
             params=(0,'EUR',divisa)
             con=sqlite3.connect(ruta_db)
             cur =con.cursor()
@@ -161,9 +162,9 @@ class ProcesaDatos:
                 resta=resta_resultado[1]
             else: resta=0
             #con.close()
-            total_divisa=suma_resultado[1]-resta
+            total_divisa=suma_resultado[i][1]-resta
             datos.append((divisa,total_divisa))
-            suma_resultado=cur.fetchone()
+            i=i+1
         #con.close()
         i=0
         suma_cripto=0
@@ -173,6 +174,7 @@ class ProcesaDatos:
            
            tasa=oc.obtener_cambio(divisa1,'EUR')
            suma_cripto+=tasa*(datos[i][1])
+           i=i+1
            
     
         posicion_cripto_monedas=round(suma_cripto,9)
